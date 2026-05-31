@@ -57,8 +57,8 @@ export function HabitStats({ habits, recentLogs }: Props) {
       </CardHeader>
       <CardContent className="space-y-1">
         {/* Day headers */}
-        <div className="flex items-center mb-2">
-          <div className="flex-1" />
+        <div className="flex items-center gap-1 mb-2">
+          <div className="flex-1 min-w-0" />
           {last7.map((day) => (
             <div key={day} className="w-8 text-center text-xs text-muted-foreground">
               {new Date(day + 'T12:00:00').toLocaleDateString('en', { weekday: 'narrow' })}
@@ -72,7 +72,7 @@ export function HabitStats({ habits, recentLogs }: Props) {
 
           return (
             <div key={habit.id} className="flex items-center gap-1 py-1">
-              <div className="flex-1 min-w-0 pr-2">
+              <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{habit.title}</div>
                 <div className="text-xs text-muted-foreground">
                   {streak > 0 ? `🔥 ${streak}d streak` : `${rate}% done`}
