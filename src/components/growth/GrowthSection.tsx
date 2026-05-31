@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { DailyTask, GrowthArea, GrowthStreak } from '@/types'
-import { Check, Plus, Flame } from 'lucide-react'
+import { Check, Plus, Flame, Trash2 } from 'lucide-react'
 import { AREA_CONFIG, TASK_SUGGESTIONS, isStreakActive } from '@/lib/growth'
 
 interface Props {
@@ -84,6 +84,12 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
     await insertTask(title)
   }
 
+  async function deleteTask(id: string) {
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+    const supabase = createClient()
+    await supabase.from('daily_tasks').delete().eq('id', id)
+  }
+
   const completedCount = tasks.filter((t) => t.completed).length
 
   return (
@@ -128,6 +134,12 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
             <span className={`flex-1 text-sm ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
               {task.title}
             </span>
+            <button
+              onClick={() => deleteTask(task.id)}
+              className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all p-1 rounded shrink-0"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         ))}
 
