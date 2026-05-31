@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { cn } from '@/lib/utils'
 import './globals.css'
 
@@ -15,6 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cn('dark font-sans', inter.variable)}>
       <body className="antialiased min-h-screen bg-background text-foreground">
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
