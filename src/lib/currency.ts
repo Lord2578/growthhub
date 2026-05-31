@@ -55,14 +55,7 @@ export async function fetchExchangeRates(baseCurrency: Currency = 'USD'): Promis
   }
 
   try {
-    const targets = (['USD', 'EUR', 'PLN', 'UAH'] as Currency[])
-      .filter((c) => c !== baseCurrency)
-      .join(',')
-
-    const res = await fetch(
-      `https://api.frankfurter.app/latest?from=${baseCurrency}&to=${targets}`,
-      { signal: AbortSignal.timeout(5000) }
-    )
+    const res = await fetch(`/api/rates?base=${baseCurrency}`)
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
