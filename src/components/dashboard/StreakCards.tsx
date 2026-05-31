@@ -1,22 +1,8 @@
 'use client'
 
 import { Card, CardContent } from '@/components/ui/card'
-import { GrowthStreak, GrowthArea } from '@/types'
-
-const AREA_CONFIG: Record<GrowthArea, { label: string; icon: string; color: string }> = {
-  english: { label: 'English', icon: '', color: 'text-blue-400' },
-  technical: { label: 'Technical', icon: '', color: 'text-purple-400' },
-  interview: { label: 'Interview', icon: '‍', color: 'text-yellow-400' },
-  jobs: { label: 'Job Search', icon: '', color: 'text-green-400' },
-}
-
-function isStreakActive(lastDate: string | null): boolean {
-  if (!lastDate) return false
-  const last = new Date(lastDate)
-  const today = new Date()
-  const diff = Math.floor((today.getTime() - last.getTime()) / 86400000)
-  return diff <= 1
-}
+import { GrowthStreak } from '@/types'
+import { AREA_CONFIG, isStreakActive } from '@/lib/growth'
 
 export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
   return (
@@ -27,7 +13,7 @@ export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
           const config = AREA_CONFIG[streak.area]
           const active = isStreakActive(streak.last_activity_date)
           return (
-            <Card key={streak.id} className={`${active ? 'border-primary/30' : ''}`}>
+            <Card key={streak.id} className={active ? 'border-primary/30' : ''}>
               <CardContent className="pt-4 pb-3 text-center">
                 <div className="text-2xl mb-1">{config.icon}</div>
                 <div className={`text-2xl font-bold ${active ? config.color : 'text-muted-foreground'}`}>

@@ -65,7 +65,7 @@ export function TodayTasks({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground">Today&apos;s Tasks</h3>
+        <h3 className="text-sm font-medium text-muted-foreground mb-0">Today&apos;s Tasks</h3>
         <div className="flex items-center gap-3">
           {daysLeft !== null && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

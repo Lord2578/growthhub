@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { MonthlyIncome, Currency, CURRENCIES } from '@/types'
-import { TrendingUp } from 'lucide-react'
+import { TrendingUp, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface Props {
@@ -23,6 +23,7 @@ export function IncomeForm({ userId, currentIncome, selectedMonth }: Props) {
   const [currency, setCurrency] = useState<Currency>((currentIncome?.currency as Currency) ?? 'USD')
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -40,6 +41,16 @@ export function IncomeForm({ userId, currentIncome, selectedMonth }: Props) {
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
     setLoading(false)
+    router.refresh()
+  }
+
+  async function handleDelete() {
+    if (!currentIncome) return
+    setDeleting(true)
+    const supabase = createClient()
+    await supabase.from('monthly_income').delete().eq('id', currentIncome.id)
+    setAmount('')
+    setDeleting(false)
     router.refresh()
   }
 
@@ -77,9 +88,23 @@ export function IncomeForm({ userId, currentIncome, selectedMonth }: Props) {
               </Select>
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {saved ? 'Saved!' : loading ? 'Saving...' : currentIncome ? 'Update Income' : 'Set Income'}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" className="flex-1" disabled={loading}>
+              {saved ? 'Saved!' : loading ? 'Saving...' : currentIncome ? 'Update Income' : 'Set Income'}
+            </Button>
+            {currentIncome && (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>

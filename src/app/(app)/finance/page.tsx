@@ -6,6 +6,7 @@ import { MonthlyChart } from '@/components/finance/MonthlyChart'
 import { SavingsGoals } from '@/components/finance/SavingsGoals'
 import { ExpensePie } from '@/components/finance/ExpensePie'
 import { MonthSelector } from '@/components/finance/MonthSelector'
+import { ExpenseList } from '@/components/finance/ExpenseList'
 
 export default async function FinancePage({
   searchParams,
@@ -49,6 +50,8 @@ export default async function FinancePage({
           <ExpensePie expenses={expenses ?? []} />
           <SavingsGoals goals={goals ?? []} userId={user.id} />
         </div>
+
+        <ExpenseList initialExpenses={expenses ?? []} />
       </div>
     </div>
   )

@@ -96,5 +96,22 @@ export interface JobApplication {
 export interface ExchangeRates {
   base: Currency
   rates: Record<string, number>
-  updatedAt: number // timestamp
+  updatedAt: number
+}
+
+export interface Habit {
+  id: string
+  user_id: string
+  title: string
+  order_index: number
+  created_at: string
+}
+
+export interface HabitLog {
+  id: string
+  habit_id: string
+  user_id: string
+  date: string
+  completed: boolean
+  created_at: string
 }

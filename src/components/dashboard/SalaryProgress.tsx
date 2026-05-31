@@ -18,7 +18,7 @@ export function SalaryProgress({ settings }: { settings: UserSettings | null }) 
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">Salary goal progress</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">Salary Goal Progress</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex justify-between text-sm">

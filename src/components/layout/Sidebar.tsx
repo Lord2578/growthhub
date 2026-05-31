@@ -1,19 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Wallet, TrendingUp, Briefcase, Settings, LogOut } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
-
-const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/finance', label: 'Finance', icon: Wallet },
-  { href: '/growth', label: 'Growth', icon: TrendingUp },
-  { href: '/jobs', label: 'Jobs', icon: Briefcase },
-  { href: '/settings', label: 'Settings', icon: Settings },
-]
+import { NAV_ITEMS } from '@/lib/nav'
 
 export function Sidebar() {
   const pathname = usePathname()

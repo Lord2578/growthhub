@@ -9,41 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { DailyTask, GrowthArea, GrowthStreak } from '@/types'
 import { Check, Plus, Flame } from 'lucide-react'
-
-const AREA_CONFIG: Record<GrowthArea, { label: string; icon: string; color: string; description: string }> = {
-  english: {
-    label: 'English',
-    icon: '',
-    color: 'text-blue-400',
-    description: 'Reading, writing, vocabulary, speaking practice',
-  },
-  technical: {
-    label: 'Technical Skills',
-    icon: '',
-    color: 'text-purple-400',
-    description: 'Coding, system design, algorithms',
-  },
-  interview: {
-    label: 'Interview Prep',
-    icon: '‍',
-    color: 'text-yellow-400',
-    description: 'Behavioral questions, mock interviews, STAR stories',
-  },
-  jobs: {
-    label: 'Job Search',
-    icon: '',
-    color: 'text-green-400',
-    description: 'Applications, networking, LinkedIn, referrals',
-  },
-}
-
-function isStreakActive(lastDate: string | null): boolean {
-  if (!lastDate) return false
-  const last = new Date(lastDate)
-  const today = new Date()
-  const diff = Math.floor((today.getTime() - last.getTime()) / 86400000)
-  return diff <= 1
-}
+import { AREA_CONFIG, TASK_SUGGESTIONS, isStreakActive } from '@/lib/growth'
 
 interface Props {
   area: GrowthArea
@@ -59,6 +25,11 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
   const [newTask, setNewTask] = useState('')
   const [adding, setAdding] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  const suggestions = TASK_SUGGESTIONS[area].filter(
+    (s) => !tasks.some((t) => t.title === s)
+  )
   const config = AREA_CONFIG[area]
   const active = isStreakActive(streak?.last_activity_date ?? null)
 
@@ -68,7 +39,6 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
     setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)))
     await supabase.from('daily_tasks').update({ completed: updated.completed }).eq('id', task.id)
 
-    // Update streak if completing a task
     if (updated.completed && streak) {
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
@@ -94,20 +64,24 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
     e.preventDefault()
     if (!newTask.trim()) return
     setLoading(true)
+    await insertTask(newTask.trim())
+    setNewTask('')
+    setAdding(false)
+    setLoading(false)
+  }
 
+  async function insertTask(title: string) {
     const supabase = createClient()
     const { data } = await supabase
       .from('daily_tasks')
-      .insert({ user_id: userId, title: newTask.trim(), area, date: today })
+      .insert({ user_id: userId, title, area, date: today })
       .select()
       .single()
+    if (data) setTasks((prev) => [...prev, data])
+  }
 
-    if (data) {
-      setTasks((prev) => [...prev, data])
-      setNewTask('')
-      setAdding(false)
-    }
-    setLoading(false)
+  async function addSuggestion(title: string) {
+    await insertTask(title)
   }
 
   const completedCount = tasks.filter((t) => t.completed).length
@@ -118,7 +92,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
         <div className="flex items-center gap-3">
           <div className="text-2xl">{config.icon}</div>
           <div>
-            <CardTitle className="text-base">{config.label}</CardTitle>
+            <CardTitle className="text-base font-semibold">{config.label}</CardTitle>
             <p className="text-xs text-muted-foreground mt-0.5">{config.description}</p>
           </div>
         </div>
@@ -157,6 +131,20 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
           </div>
         ))}
 
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 pt-1 pb-1">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => addSuggestion(s)}
+                className="text-xs px-2.5 py-1 rounded-full border border-border hover:border-primary hover:text-primary transition-colors text-muted-foreground"
+              >
+                + {s}
+              </button>
+            ))}
+          </div>
+        )}
+
         {adding ? (
           <form onSubmit={addTask} className="flex gap-2 pt-1">
             <Input
@@ -172,13 +160,27 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
             </Button>
           </form>
         ) : (
-          <button
-            onClick={() => setAdding(true)}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground w-full p-2 rounded-lg hover:bg-accent transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Add task
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setAdding(true)}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground flex-1 p-2 rounded-lg hover:bg-accent transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add task
+            </button>
+            {suggestions.length > 0 && (
+              <button
+                onClick={() => setShowSuggestions((v) => !v)}
+                className={`text-xs px-3 py-2 rounded-lg transition-colors ${
+                  showSuggestions
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                }`}
+              >
+                Suggestions
+              </button>
+            )}
+          </div>
         )}
 
         {completedCount > 0 && (
