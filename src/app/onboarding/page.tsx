@@ -44,7 +44,7 @@ export default function OnboardingPage() {
         target_salary: targetSalary ? parseFloat(targetSalary) : null,
         salary_currency: salaryCurrency,
         base_currency: baseCurrency,
-      })
+      }, { onConflict: 'user_id' })
 
     if (error) {
       setError(error.message)
