@@ -20,9 +20,9 @@ export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
                   {streak.streak_count}
                 </div>
                 <div className="text-xs text-muted-foreground mt-0.5">{config.label}</div>
-                {active && (
-                  <div className="text-xs text-primary mt-1">🔥 Active</div>
-                )}
+                <div className="text-xs mt-1 h-4">
+                  {active && <span className="text-primary">🔥 Active</span>}
+                </div>
               </CardContent>
             </Card>
           )
