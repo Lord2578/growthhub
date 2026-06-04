@@ -113,7 +113,7 @@ export function convertAmount(
   const base = rates.base
 
   // Helper: get rate relative to base, fall back to hardcoded rates via USD
-  function getRateVsBase(currency: string): number {
+  function getRateVsBase(currency: Currency): number {
     if (currency === base) return 1
     const direct = rates.rates[currency]
     if (direct) return direct
@@ -134,10 +134,7 @@ export function convertAmount(
 
   if (to === base) return amountInBase
 
-  const toRate = getRateVsBase(to)
-  if (!toRate) return amountInBase
-
-  return amountInBase * toRate
+  return amountInBase * getRateVsBase(to)
 }
 
 export function convertFromUSD(amountUSD: number, to: Currency, rates: ExchangeRates): number {

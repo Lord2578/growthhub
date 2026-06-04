@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
+import { CURRENCIES } from '@/types'
 
-const CURRENCIES = ['USD', 'EUR', 'PLN', 'UAH']
+const CURRENCIES_LOWER = CURRENCIES.map((c) => c.toLowerCase())
 
 // Cache in-memory for serverless (per instance, short-lived)
 let cache: { data: Record<string, number>; base: string; ts: number } | null = null
@@ -30,6 +31,10 @@ export async function GET(request: Request) {
   )
 }
 
+function hasAllCurrencies(rates: Record<string, number>): boolean {
+  return CURRENCIES.every((c) => c in rates)
+}
+
 // https://github.com/fawazahmed0/exchange-api — free, unlimited, daily updates
 async function tryFawazahmed(base: string): Promise<Record<string, number> | null> {
   const baseLower = base.toLowerCase()
@@ -47,12 +52,11 @@ async function tryFawazahmed(base: string): Promise<Record<string, number> | nul
       const ratesRaw = data[baseLower]
       if (!ratesRaw) continue
       const filtered: Record<string, number> = { [base]: 1 }
-      for (const c of CURRENCIES) {
-        const val = ratesRaw[c.toLowerCase()]
-        if (val !== undefined) filtered[c] = val
+      for (let i = 0; i < CURRENCIES.length; i++) {
+        const val = ratesRaw[CURRENCIES_LOWER[i]]
+        if (val !== undefined) filtered[CURRENCIES[i]] = val
       }
-      // Validate all required currencies are present
-      if (CURRENCIES.some((c) => !(c in filtered))) continue
+      if (!hasAllCurrencies(filtered)) continue
       return filtered
     } catch {
       continue
@@ -74,7 +78,7 @@ async function tryErApi(base: string): Promise<Record<string, number> | null> {
     for (const c of CURRENCIES) {
       if (data.rates[c] !== undefined) filtered[c] = data.rates[c]
     }
-    if (CURRENCIES.some((c) => !(c in filtered))) return null
+    if (!hasAllCurrencies(filtered)) return null
     return filtered
   } catch {
     return null
