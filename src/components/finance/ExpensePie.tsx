@@ -13,6 +13,7 @@ const COLORS: Record<string, string> = {
   trips: 'hsl(280, 60%, 55%)',
   savings: 'hsl(170, 70%, 40%)',
   subscriptions: 'hsl(200, 80%, 50%)',
+  games: 'hsl(320, 70%, 55%)',
   other: 'hsl(0, 0%, 55%)',
 }
 

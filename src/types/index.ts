@@ -9,8 +9,8 @@ export const CURRENCY_SYMBOLS: Record<Currency, string> = {
 
 export const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'UAH']
 
-export type ExpenseCategory = 'housing' | 'food' | 'transport' | 'trips' | 'savings' | 'subscriptions' | 'other'
-export const EXPENSE_CATEGORIES: ExpenseCategory[] = ['housing', 'food', 'transport', 'trips', 'savings', 'subscriptions', 'other']
+export type ExpenseCategory = 'housing' | 'food' | 'transport' | 'trips' | 'savings' | 'subscriptions' | 'games' | 'other'
+export const EXPENSE_CATEGORIES: ExpenseCategory[] = ['housing', 'food', 'transport', 'trips', 'savings', 'subscriptions', 'games', 'other']
 
 export type GrowthArea = 'english' | 'technical' | 'interview' | 'jobs'
 export const GROWTH_AREAS: GrowthArea[] = ['english', 'technical', 'interview', 'jobs']

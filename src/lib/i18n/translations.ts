@@ -75,6 +75,7 @@ export const translations = {
       trips: 'Trips',
       savings: 'Savings',
       subscriptions: 'Subscriptions',
+      games: 'Games',
       other: 'Other',
     },
     growth: {
@@ -224,6 +225,7 @@ export const translations = {
       trips: 'Подорожі',
       savings: 'Заощадження',
       subscriptions: 'Підписки',
+      games: 'Ігри',
       other: 'Інше',
     },
     growth: {

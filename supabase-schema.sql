@@ -29,7 +29,7 @@ create table monthly_income (
 create table expenses (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
-  category text not null check (category in ('housing','food','transport','trips','savings','other')),
+  category text not null check (category in ('housing','food','transport','trips','savings','subscriptions','games','other')),
   amount numeric not null,
   currency text not null default 'USD',
   amount_usd numeric not null,
