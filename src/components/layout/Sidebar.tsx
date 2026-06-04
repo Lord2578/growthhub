@@ -6,10 +6,12 @@ import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { NAV_ITEMS } from '@/lib/nav'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const { t } = useTranslation()
 
   async function handleLogout() {
     const supabase = createClient()
@@ -25,7 +27,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-1">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+        {NAV_ITEMS.map(({ href, tKey, icon: Icon }) => (
           <Link
             key={href}
             href={href}
@@ -37,7 +39,7 @@ export function Sidebar() {
             )}
           >
             <Icon className="w-4 h-4 shrink-0" />
-            {label}
+            {t(tKey)}
           </Link>
         ))}
       </nav>
@@ -47,7 +49,7 @@ export function Sidebar() {
         className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-full"
       >
         <LogOut className="w-4 h-4" />
-        Sign out
+        {t('nav.signOut')}
       </button>
     </aside>
   )

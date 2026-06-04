@@ -1,6 +1,7 @@
 'use client'
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { MonthlyIncome, Expense } from '@/types'
@@ -14,11 +15,11 @@ const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 
 export function MonthlyChart({ income, expenses }: Props) {
   const { convert, baseCurrency } = useCurrency()
+  const { t } = useTranslation()
 
-  // Build chart data from income records (last 6 months)
   const data = income.map((inc) => {
     const monthDate = new Date(inc.month)
-    const monthKey = inc.month.slice(0, 7) // "2024-01"
+    const monthKey = inc.month.slice(0, 7)
     const label = `${MONTH_LABELS[monthDate.getMonth()]} ${monthDate.getFullYear().toString().slice(2)}`
 
     const monthExpenses = expenses
@@ -27,19 +28,19 @@ export function MonthlyChart({ income, expenses }: Props) {
 
     return {
       month: label,
-      Income: Math.round(convert(inc.amount, inc.currency)),
-      Expenses: Math.round(monthExpenses),
+      income: Math.round(convert(inc.amount, inc.currency)),
+      expenses: Math.round(monthExpenses),
     }
   }).reverse()
 
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Income vs Expenses ({baseCurrency})</CardTitle>
+        <CardTitle className="text-base">{t('finance.incomeVsExpenses')} ({baseCurrency})</CardTitle>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No data yet. Set your monthly income to get started.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">{t('finance.noData')}</p>
         ) : (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
@@ -55,8 +56,8 @@ export function MonthlyChart({ income, expenses }: Props) {
                 }}
               />
               <Legend wrapperStyle={{ fontSize: '12px' }} />
-              <Bar dataKey="Income" fill="hsl(142, 76%, 46%)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Expenses" fill="hsl(0, 84%, 60%)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="income" name={t('finance.incomeLabel')} fill="hsl(142, 76%, 46%)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="expenses" name={t('finance.expensesLabel')} fill="hsl(0, 84%, 60%)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

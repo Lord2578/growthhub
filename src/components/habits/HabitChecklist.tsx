@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 interface Props {
   initialHabits: Habit[]
@@ -19,6 +20,7 @@ interface Props {
 
 export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Props) {
   const router = useRouter()
+  const { t } = useTranslation()
   const [habits, setHabits] = useState(initialHabits)
   const [logs, setLogs] = useState<Record<string, boolean>>(
     Object.fromEntries(todayLogs.map((l) => [l.habit_id, l.completed]))
@@ -72,9 +74,9 @@ export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Prop
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold">Today</CardTitle>
+          <CardTitle className="text-base font-semibold">{t('habits.today')}</CardTitle>
           <span className="text-sm text-muted-foreground">
-            {completed}/{total} done
+            {completed}/{total} {t('habits.done')}
           </span>
         </div>
         {total > 0 && <Progress value={pct} className="h-1.5 mt-3" />}
@@ -82,7 +84,7 @@ export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Prop
       <CardContent className="space-y-1">
         {habits.length === 0 && !adding && (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No habits yet. Add your first one!
+            {t('habits.noHabits')}
           </p>
         )}
 
@@ -119,12 +121,12 @@ export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Prop
             <Input
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="New habit..."
+              placeholder={t('habits.newHabit')}
               className="flex-1 h-8 text-sm"
               autoFocus
             />
             <Button type="submit" size="sm" className="h-8" disabled={loading}>
-              Add
+              {t('habits.add')}
             </Button>
             <Button
               type="button"
@@ -133,7 +135,7 @@ export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Prop
               className="h-8"
               onClick={() => setAdding(false)}
             >
-              Cancel
+              {t('habits.cancel')}
             </Button>
           </form>
         ) : (
@@ -142,7 +144,7 @@ export function HabitChecklist({ initialHabits, todayLogs, userId, today }: Prop
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground w-full px-2 py-2.5 rounded-lg hover:bg-accent transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Add habit
+            {t('habits.addHabit')}
           </button>
         )}
       </CardContent>

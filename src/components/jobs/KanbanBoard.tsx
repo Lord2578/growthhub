@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,16 +13,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { JobApplication, JobStatus, JOB_STATUSES, Currency, CURRENCIES } from '@/types'
 import { Plus, Building2, Banknote } from 'lucide-react'
 
-const STATUS_CONFIG: Record<JobStatus, { label: string; color: string }> = {
-  applied:   { label: 'Applied',    color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
-  response:  { label: 'Response',   color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' },
-  interview: { label: 'Interview',  color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
-  offer:     { label: 'Offer',      color: 'bg-green-500/10 text-green-400 border-green-500/20' },
-  rejected:  { label: 'Rejected',   color: 'bg-red-500/10 text-red-400 border-red-500/20' },
+const STATUS_COLORS: Record<JobStatus, string> = {
+  applied:   'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  response:  'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+  interview: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  offer:     'bg-green-500/10 text-green-400 border-green-500/20',
+  rejected:  'bg-red-500/10 text-red-400 border-red-500/20',
 }
 
 function JobCard({ job, onStatusChange }: { job: JobApplication; onStatusChange: (id: string, status: JobStatus) => void }) {
   const { convert, format } = useCurrency()
+  const { t } = useTranslation()
 
   const salary =
     job.salary_min || job.salary_max
@@ -49,7 +51,7 @@ function JobCard({ job, onStatusChange }: { job: JobApplication; onStatusChange:
           </SelectTrigger>
           <SelectContent>
             {JOB_STATUSES.map((s) => (
-              <SelectItem key={s} value={s} className="text-xs capitalize">{STATUS_CONFIG[s].label}</SelectItem>
+              <SelectItem key={s} value={s} className="text-xs">{t(`jobs.status.${s}`)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -72,6 +74,7 @@ function JobCard({ job, onStatusChange }: { job: JobApplication; onStatusChange:
 
 function AddJobDialog({ userId, onAdd }: { userId: string; onAdd: (job: JobApplication) => void }) {
   const router = useRouter()
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [company, setCompany] = useState('')
@@ -118,32 +121,32 @@ function AddJobDialog({ userId, onAdd }: { userId: string; onAdd: (job: JobAppli
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 text-sm font-medium transition-colors">
-        <Plus className="w-4 h-4 mr-1" /> Add Application
+        <Plus className="w-4 h-4 mr-1" /> {t('jobs.addApplication')}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Job Application</DialogTitle>
+          <DialogTitle>{t('jobs.newApplication')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-3 mt-2">
           <div className="space-y-1.5">
-            <Label>Company</Label>
+            <Label>{t('jobs.company')}</Label>
             <Input placeholder="Acme Corp" value={company} onChange={(e) => setCompany(e.target.value)} required />
           </div>
           <div className="space-y-1.5">
-            <Label>Position</Label>
+            <Label>{t('jobs.position')}</Label>
             <Input placeholder="Frontend Developer" value={position} onChange={(e) => setPosition(e.target.value)} required />
           </div>
           <div className="flex gap-2">
             <div className="flex-1 space-y-1.5">
-              <Label>Salary min/mo</Label>
+              <Label>{t('jobs.salaryMin')}</Label>
               <Input type="number" min="0" placeholder="3000" value={salaryMin} onChange={(e) => setSalaryMin(e.target.value)} />
             </div>
             <div className="flex-1 space-y-1.5">
-              <Label>Salary max/mo</Label>
+              <Label>{t('jobs.salaryMax')}</Label>
               <Input type="number" min="0" placeholder="5000" value={salaryMax} onChange={(e) => setSalaryMax(e.target.value)} />
             </div>
             <div className="w-20 space-y-1.5">
-              <Label>Currency</Label>
+              <Label>{t('finance.currency')}</Label>
               <Select value={salaryCurrency} onValueChange={(v) => setSalaryCurrency(v as Currency)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -153,15 +156,15 @@ function AddJobDialog({ userId, onAdd }: { userId: string; onAdd: (job: JobAppli
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label>Applied date</Label>
+            <Label>{t('jobs.appliedDate')}</Label>
             <Input type="date" value={appliedDate} onChange={(e) => setAppliedDate(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label>Notes (optional)</Label>
+            <Label>{t('jobs.notes')}</Label>
             <Input placeholder="Referral from John, remote-friendly..." value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Saving...' : 'Add Application'}
+            {loading ? t('finance.saving') : t('jobs.addApplication')}
           </Button>
         </form>
       </DialogContent>
@@ -171,6 +174,7 @@ function AddJobDialog({ userId, onAdd }: { userId: string; onAdd: (job: JobAppli
 
 export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplication[]; userId: string }) {
   const [jobs, setJobs] = useState(initialJobs)
+  const { t } = useTranslation()
 
   async function handleStatusChange(id: string, status: JobStatus) {
     setJobs((prev) => prev.map((j) => (j.id === id ? { ...j, status } : j)))
@@ -185,19 +189,18 @@ export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplicati
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground">Applications Board</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{t('jobs.board')}</h3>
         <AddJobDialog userId={userId} onAdd={handleAdd} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 overflow-x-auto">
         {JOB_STATUSES.map((status) => {
           const statusJobs = jobs.filter((j) => j.status === status)
-          const config = STATUS_CONFIG[status]
 
           return (
             <div key={status} className="min-w-[200px]">
-              <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border mb-3 ${config.color}`}>
-                <span className="text-xs font-semibold">{config.label}</span>
+              <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border mb-3 ${STATUS_COLORS[status]}`}>
+                <span className="text-xs font-semibold">{t(`jobs.status.${status}`)}</span>
                 <span className="text-xs opacity-70 ml-auto">{statusJobs.length}</span>
               </div>
               <div className="space-y-2">
@@ -206,7 +209,7 @@ export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplicati
                 ))}
                 {statusJobs.length === 0 && (
                   <div className="h-16 rounded-lg border border-dashed border-border flex items-center justify-center">
-                    <span className="text-xs text-muted-foreground">Empty</span>
+                    <span className="text-xs text-muted-foreground">{t('jobs.empty')}</span>
                   </div>
                 )}
               </div>

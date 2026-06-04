@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DailyTask, GrowthArea, GROWTH_AREAS } from '@/types'
 import { Plus, Check, Calendar } from 'lucide-react'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 function daysUntil(deadline: string | null): number | null {
   if (!deadline) return null
@@ -31,6 +32,7 @@ export function TodayTasks({
   const [newTitle, setNewTitle] = useState('')
   const [newArea, setNewArea] = useState<GrowthArea>('technical')
   const [adding, setAdding] = useState(false)
+  const { t } = useTranslation()
 
   const today = new Date().toISOString().split('T')[0]
   const daysLeft = daysUntil(nextGoalDeadline)
@@ -60,18 +62,18 @@ export function TodayTasks({
     }
   }
 
-  const completed = tasks.filter((t) => t.completed).length
+  const completed = tasks.filter((task) => task.completed).length
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground mb-0">Today&apos;s Tasks</h3>
+        <h3 className="text-sm font-medium text-muted-foreground mb-0">{t('dashboard.todayTasks')}</h3>
         <div className="flex items-center gap-3">
           {daysLeft !== null && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Calendar className="w-3.5 h-3.5" />
               <span className={daysLeft <= 7 ? 'text-yellow-500 font-medium' : ''}>
-                {daysLeft > 0 ? `${daysLeft}d to goal` : 'Goal deadline reached!'}
+                {daysLeft > 0 ? `${daysLeft} ${t('dashboard.daysToGoal')}` : t('dashboard.goalDeadline')}
               </span>
             </div>
           )}
@@ -82,7 +84,7 @@ export function TodayTasks({
       <Card>
         <CardContent className="pt-4 space-y-2">
           {tasks.length === 0 && !adding && (
-            <p className="text-sm text-muted-foreground text-center py-2">No tasks today. Add one!</p>
+            <p className="text-sm text-muted-foreground text-center py-2">{t('dashboard.noTasks')}</p>
           )}
 
           {tasks.map((task) => (
@@ -126,9 +128,9 @@ export function TodayTasks({
                   ))}
                 </SelectContent>
               </Select>
-              <Button type="submit" size="sm" className="h-8">Add</Button>
+              <Button type="submit" size="sm" className="h-8">{t('common.add')}</Button>
               <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
-                Cancel
+                {t('common.cancel')}
               </Button>
             </form>
           ) : (
@@ -137,7 +139,7 @@ export function TodayTasks({
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground w-full p-2 rounded-lg hover:bg-accent transition-colors"
             >
               <Plus className="w-4 h-4" />
-              Add task
+              {t('dashboard.addTask')}
             </button>
           )}
         </CardContent>

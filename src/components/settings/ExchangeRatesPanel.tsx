@@ -1,6 +1,7 @@
 'use client'
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,6 +10,7 @@ import { RefreshCw, AlertTriangle, TrendingUp } from 'lucide-react'
 
 export function ExchangeRatesPanel() {
   const { rates, ratesError, isLoading, lastUpdated, refresh, baseCurrency } = useCurrency()
+  const { t } = useTranslation()
 
   const otherCurrencies = CURRENCIES.filter((c) => c !== baseCurrency)
 
@@ -17,11 +19,11 @@ export function ExchangeRatesPanel() {
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-primary" />
-          <CardTitle className="text-base">Exchange Rates</CardTitle>
+          <CardTitle className="text-base">{t('settings.exchangeRates')}</CardTitle>
         </div>
         <Button variant="outline" size="sm" onClick={refresh} disabled={isLoading} className="h-7 text-xs">
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
-          Refresh
+          {t('settings.refresh')}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -33,7 +35,7 @@ export function ExchangeRatesPanel() {
         )}
 
         <div className="text-xs text-muted-foreground">
-          Base: <span className="font-medium text-foreground">{baseCurrency}</span>
+          {t('settings.base')} <span className="font-medium text-foreground">{baseCurrency}</span>
           {' — '}1 {baseCurrency} = ...
         </div>
 
@@ -71,17 +73,17 @@ export function ExchangeRatesPanel() {
             })}
           </div>
         ) : (
-          <div className="text-sm text-muted-foreground text-center py-4">Loading rates...</div>
+          <div className="text-sm text-muted-foreground text-center py-4">{t('settings.loadingRates')}</div>
         )}
 
         <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <span>Last updated:</span>
+          <span>{t('settings.lastUpdated')}</span>
           <Badge variant="secondary" className="text-xs">{lastUpdated}</Badge>
-          <span className="ml-1">• Cached for 1 hour</span>
+          <span className="ml-1">• {t('settings.cachedFor')}</span>
         </div>
 
         <div className="text-xs text-muted-foreground">
-          Rates provided by{' '}
+          {t('settings.ratesBy')}{' '}
           <span className="text-primary">frankfurter.app</span>
         </div>
       </CardContent>

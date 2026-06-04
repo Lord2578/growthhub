@@ -1,11 +1,13 @@
 'use client'
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Card, CardContent } from '@/components/ui/card'
 import { JobApplication } from '@/types'
 
 export function JobStats({ jobs }: { jobs: JobApplication[] }) {
   const { convert, format } = useCurrency()
+  const { t } = useTranslation()
 
   const total = jobs.length
   const responded = jobs.filter((j) => ['response', 'interview', 'offer'].includes(j.status)).length
@@ -26,19 +28,19 @@ export function JobStats({ jobs }: { jobs: JobApplication[] }) {
       <Card>
         <CardContent className="pt-4 pb-3">
           <div className="text-2xl font-bold text-primary">{total}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">Total Applied</div>
+          <div className="text-xs text-muted-foreground mt-0.5">{t('jobs.totalApplied')}</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="pt-4 pb-3">
           <div className="text-2xl font-bold text-blue-400">{responseRate}%</div>
-          <div className="text-xs text-muted-foreground mt-0.5">Response Rate</div>
+          <div className="text-xs text-muted-foreground mt-0.5">{t('jobs.responseRate')}</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="pt-4 pb-3">
           <div className="text-2xl font-bold text-green-400">{offers}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">Offers</div>
+          <div className="text-xs text-muted-foreground mt-0.5">{t('jobs.offers')}</div>
         </CardContent>
       </Card>
       <Card>
@@ -46,7 +48,7 @@ export function JobStats({ jobs }: { jobs: JobApplication[] }) {
           <div className="text-2xl font-bold text-yellow-400">
             {avgSalary !== null ? format(Math.round(avgSalary)) : '—'}
           </div>
-          <div className="text-xs text-muted-foreground mt-0.5">Avg Salary Offered</div>
+          <div className="text-xs text-muted-foreground mt-0.5">{t('jobs.avgSalary')}</div>
         </CardContent>
       </Card>
     </div>

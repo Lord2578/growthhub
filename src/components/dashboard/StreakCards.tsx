@@ -3,11 +3,14 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { GrowthStreak } from '@/types'
 import { AREA_CONFIG, isStreakActive } from '@/lib/growth'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
+  const { t } = useTranslation()
+
   return (
     <div>
-      <h3 className="text-sm font-medium text-muted-foreground mb-3">Growth Streaks</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mb-3">{t('dashboard.streaks')}</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {streaks.map((streak) => {
           const config = AREA_CONFIG[streak.area]
@@ -19,9 +22,9 @@ export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
                 <div className={`text-2xl font-bold ${active ? config.color : 'text-muted-foreground'}`}>
                   {streak.streak_count}
                 </div>
-                <div className="text-xs text-muted-foreground mt-0.5">{config.label}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t(`growth.areas.${streak.area}`)}</div>
                 <div className="text-xs mt-1 h-4">
-                  {active && <span className="text-primary">🔥 Active</span>}
+                  {active && <span className="text-primary">🔥 {t('dashboard.active')}</span>}
                 </div>
               </CardContent>
             </Card>

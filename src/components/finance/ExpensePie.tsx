@@ -1,6 +1,7 @@
 'use client'
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Expense } from '@/types'
@@ -11,11 +12,13 @@ const COLORS: Record<string, string> = {
   transport: 'hsl(38, 90%, 50%)',
   trips: 'hsl(280, 60%, 55%)',
   savings: 'hsl(170, 70%, 40%)',
+  subscriptions: 'hsl(200, 80%, 50%)',
   other: 'hsl(0, 0%, 55%)',
 }
 
 export function ExpensePie({ expenses }: { expenses: Expense[] }) {
   const { convert, format } = useCurrency()
+  const { t } = useTranslation()
 
   const byCategory = expenses.reduce<Record<string, number>>((acc, e) => {
     const val = convert(e.amount_usd, 'USD')
@@ -33,11 +36,11 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Expenses by Category</CardTitle>
+        <CardTitle className="text-base">{t('finance.expensesByCategory')}</CardTitle>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No expenses this month.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">{t('finance.noExpenses')}</p>
         ) : (
           <>
             <ResponsiveContainer width="100%" height={200}>
@@ -74,7 +77,7 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
                       className="w-2.5 h-2.5 rounded-full"
                       style={{ backgroundColor: COLORS[d.name] ?? COLORS.other }}
                     />
-                    <span className="capitalize text-muted-foreground">{d.name}</span>
+                    <span className="text-muted-foreground">{t(`categories.${d.name}`)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{format(d.value)}</span>

@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { DailyTask, GrowthArea, GrowthStreak } from '@/types'
 import { Check, Plus, Flame, Trash2 } from 'lucide-react'
 import { AREA_CONFIG, TASK_SUGGESTIONS, isStreakActive } from '@/lib/growth'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 interface Props {
   area: GrowthArea
@@ -21,6 +22,7 @@ interface Props {
 
 export function GrowthSection({ area, streak, tasks: initialTasks, userId, today }: Props) {
   const router = useRouter()
+  const { t } = useTranslation()
   const [tasks, setTasks] = useState(initialTasks)
   const [newTask, setNewTask] = useState('')
   const [adding, setAdding] = useState(false)
@@ -28,7 +30,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
   const [showSuggestions, setShowSuggestions] = useState(false)
 
   const suggestions = TASK_SUGGESTIONS[area].filter(
-    (s) => !tasks.some((t) => t.title === s)
+    (s) => !tasks.some((task) => task.title === s)
   )
   const config = AREA_CONFIG[area]
   const active = isStreakActive(streak?.last_activity_date ?? null)
@@ -85,12 +87,12 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
   }
 
   async function deleteTask(id: string) {
-    setTasks((prev) => prev.filter((t) => t.id !== id))
+    setTasks((prev) => prev.filter((task) => task.id !== id))
     const supabase = createClient()
     await supabase.from('daily_tasks').delete().eq('id', id)
   }
 
-  const completedCount = tasks.filter((t) => t.completed).length
+  const completedCount = tasks.filter((task) => task.completed).length
 
   return (
     <Card className={active ? 'border-primary/30' : ''}>
@@ -98,7 +100,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
         <div className="flex items-center gap-3">
           <div className="text-2xl">{config.icon}</div>
           <div>
-            <CardTitle className="text-base font-semibold">{config.label}</CardTitle>
+            <CardTitle className="text-base font-semibold">{t(`growth.areas.${area}`)}</CardTitle>
             <p className="text-xs text-muted-foreground mt-0.5">{config.description}</p>
           </div>
         </div>
@@ -108,14 +110,14 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
             <div className={`text-xl font-bold ${active ? config.color : 'text-muted-foreground'}`}>
               {streak?.streak_count ?? 0}
             </div>
-            <div className="text-xs text-muted-foreground">day streak</div>
+            <div className="text-xs text-muted-foreground">{t('growth.dayStreak')}</div>
           </div>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-2">
         {tasks.length === 0 && !adding && (
-          <p className="text-sm text-muted-foreground py-1">No tasks today.</p>
+          <p className="text-sm text-muted-foreground py-1">{t('growth.noTasks')}</p>
         )}
 
         {tasks.map((task) => (
@@ -166,9 +168,9 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
               className="flex-1 h-8 text-sm"
               autoFocus
             />
-            <Button type="submit" size="sm" className="h-8" disabled={loading}>Add</Button>
+            <Button type="submit" size="sm" className="h-8" disabled={loading}>{t('growth.add')}</Button>
             <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
-              Cancel
+              {t('growth.cancel')}
             </Button>
           </form>
         ) : (
@@ -178,7 +180,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground flex-1 p-2 rounded-lg hover:bg-accent transition-colors"
             >
               <Plus className="w-4 h-4" />
-              Add task
+              {t('growth.addTask')}
             </button>
             {suggestions.length > 0 && (
               <button
@@ -189,7 +191,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
               >
-                Suggestions
+                {t('growth.suggestions')}
               </button>
             )}
           </div>
@@ -198,7 +200,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
         {completedCount > 0 && (
           <div className="pt-1">
             <Badge variant="secondary" className="text-xs">
-              {completedCount}/{tasks.length} done today
+              {completedCount}/{tasks.length} {t('growth.doneTodayOf')}
             </Badge>
           </div>
         )}

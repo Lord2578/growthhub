@@ -1,6 +1,7 @@
 'use client'
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrendingUp, TrendingDown, PiggyBank } from 'lucide-react'
 import { Expense, MonthlyIncome, UserSettings } from '@/types'
@@ -13,6 +14,7 @@ interface Props {
 
 export function OverviewCards({ income, expenses }: Props) {
   const { convert, format, baseCurrency } = useCurrency()
+  const { t } = useTranslation()
 
   const incomeConverted = income
     ? convert(income.amount, income.currency)
@@ -28,7 +30,7 @@ export function OverviewCards({ income, expenses }: Props) {
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Income this month</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground">{t('dashboard.income')}</CardTitle>
           <TrendingUp className="w-4 h-4 text-green-500" />
         </CardHeader>
         <CardContent>
@@ -43,14 +45,14 @@ export function OverviewCards({ income, expenses }: Props) {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Spent this month</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground">{t('dashboard.spent')}</CardTitle>
           <TrendingDown className="w-4 h-4 text-red-500" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-red-500">{format(totalSpent)}</div>
           {incomeConverted > 0 && (
             <p className="text-xs text-muted-foreground mt-1">
-              {Math.round((totalSpent / incomeConverted) * 100)}% of income
+              {Math.round((totalSpent / incomeConverted) * 100)}{t('dashboard.ofIncome')}
             </p>
           )}
         </CardContent>
@@ -58,14 +60,14 @@ export function OverviewCards({ income, expenses }: Props) {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Saved this month</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground">{t('dashboard.saved')}</CardTitle>
           <PiggyBank className="w-4 h-4 text-blue-500" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-blue-500">{format(saved)}</div>
           {incomeConverted > 0 && (
             <p className="text-xs text-muted-foreground mt-1">
-              {Math.round((saved / incomeConverted) * 100)}% saved
+              {Math.round((saved / incomeConverted) * 100)}{t('dashboard.pctSaved')}
             </p>
           )}
         </CardContent>

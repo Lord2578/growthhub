@@ -4,14 +4,16 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { NAV_ITEMS } from '@/lib/nav'
+import { useTranslation } from '@/lib/hooks/useTranslation'
 
 export function BottomNav() {
   const pathname = usePathname()
+  const { t } = useTranslation()
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
       <div className="flex">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, tKey, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link
@@ -23,7 +25,7 @@ export function BottomNav() {
               )}
             >
               <Icon className={cn('w-5 h-5', active && 'stroke-[2.5]')} />
-              <span className="hidden xs:block">{label}</span>
+              <span className="hidden xs:block">{t(tKey)}</span>
             </Link>
           )
         })}
