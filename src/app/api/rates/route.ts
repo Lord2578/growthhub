@@ -14,10 +14,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ base, rates: cache.data, cached: true })
   }
 
-  const targets = CURRENCIES.filter((c) => c !== base).join(',')
-
-  // Try frankfurter.app first
-  const rates = await tryFrankfurter(base, targets) ?? await tryErApi(base)
+  // Primary: fawazahmed0/currency-api via jsDelivr — free, no key, no limits, 150+ currencies incl. UAH
+  // Fallback: open.er-api.com
+  const rates = await tryFawazahmed(base) ?? await tryErApi(base)
 
   if (!rates) {
     return NextResponse.json({ error: 'All rate sources unavailable' }, { status: 503 })
@@ -31,18 +30,35 @@ export async function GET(request: Request) {
   )
 }
 
-async function tryFrankfurter(base: string, targets: string): Promise<Record<string, number> | null> {
-  try {
-    const res = await fetch(
-      `https://api.frankfurter.app/latest?from=${base}&to=${targets}`,
-      { signal: AbortSignal.timeout(5000) }
-    )
-    if (!res.ok) return null
-    const data = await res.json()
-    return { ...data.rates, [base]: 1 }
-  } catch {
-    return null
+// https://github.com/fawazahmed0/exchange-api — free, unlimited, daily updates
+async function tryFawazahmed(base: string): Promise<Record<string, number> | null> {
+  const baseLower = base.toLowerCase()
+  // Two mirrors: jsdelivr CDN and direct GitHub
+  const urls = [
+    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${baseLower}.json`,
+    `https://latest.currency-api.pages.dev/v1/currencies/${baseLower}.json`,
+  ]
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(5000) })
+      if (!res.ok) continue
+      const data = await res.json()
+      // Response shape: { date: "...", [baseLower]: { eur: 0.92, uah: 41.0, ... } }
+      const ratesRaw = data[baseLower]
+      if (!ratesRaw) continue
+      const filtered: Record<string, number> = { [base]: 1 }
+      for (const c of CURRENCIES) {
+        const val = ratesRaw[c.toLowerCase()]
+        if (val !== undefined) filtered[c] = val
+      }
+      // Validate all required currencies are present
+      if (CURRENCIES.some((c) => !(c in filtered))) continue
+      return filtered
+    } catch {
+      continue
+    }
   }
+  return null
 }
 
 async function tryErApi(base: string): Promise<Record<string, number> | null> {
@@ -58,6 +74,7 @@ async function tryErApi(base: string): Promise<Record<string, number> | null> {
     for (const c of CURRENCIES) {
       if (data.rates[c] !== undefined) filtered[c] = data.rates[c]
     }
+    if (CURRENCIES.some((c) => !(c in filtered))) return null
     return filtered
   } catch {
     return null

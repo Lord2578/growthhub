@@ -11,6 +11,11 @@ const FALLBACK_RATES: Record<string, number> = {
   USD: 1.0,
 }
 
+// Returns approximate USD rate for a currency when live rates are unavailable
+function getFallbackUsdRate(currency: string): number {
+  return FALLBACK_RATES[currency] ?? 1
+}
+
 function getCached(): ExchangeRates | null {
   if (typeof window === 'undefined') return null
   try {
@@ -107,21 +112,29 @@ export function convertAmount(
   // rates are relative to `rates.base`
   const base = rates.base
 
+  // Helper: get rate relative to base, fall back to hardcoded rates via USD
+  function getRateVsBase(currency: string): number {
+    if (currency === base) return 1
+    const direct = rates.rates[currency]
+    if (direct) return direct
+    // Fallback: convert through USD using hardcoded rates
+    // rate(currency vs base) = FALLBACK_RATES[currency] / FALLBACK_RATES[base]
+    const baseUsd = getFallbackUsdRate(base)
+    const currUsd = getFallbackUsdRate(currency)
+    return currUsd / baseUsd
+  }
+
   let amountInBase: number
   if (from === base) {
     amountInBase = amount
   } else {
-    const fromRate = rates.rates[from]
-    if (!fromRate) return amount
-    // If base is USD and from is EUR: amountInBase = amount / rates.EUR (rates[EUR] = EUR per USD = 0.92)
-    // Actually rates from frankfurter: from=USD gives rates={EUR: 0.92, ...} meaning 1 USD = 0.92 EUR
-    // So to go from EUR to USD: amount / 0.92
-    amountInBase = amount / fromRate
+    // rates[from] = how many `from` per 1 `base`  →  amountInBase = amount / rates[from]
+    amountInBase = amount / getRateVsBase(from)
   }
 
   if (to === base) return amountInBase
 
-  const toRate = rates.rates[to]
+  const toRate = getRateVsBase(to)
   if (!toRate) return amountInBase
 
   return amountInBase * toRate
