@@ -124,6 +124,7 @@ export const translations = {
       newHabit: 'New habit...',
       add: 'Add',
       cancel: 'Cancel',
+      statsTitle: 'Stats — last 7 days',
     },
     settings: {
       profile: 'Profile & Preferences',
@@ -274,6 +275,7 @@ export const translations = {
       newHabit: 'Нова звичка...',
       add: 'Додати',
       cancel: 'Скасувати',
+      statsTitle: 'Статистика — останні 7 днів',
     },
     settings: {
       profile: 'Профіль та налаштування',

@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/getUser'
 import { Header } from '@/components/layout/Header'
 import { OverviewCards } from '@/components/dashboard/OverviewCards'
 import { StreakCards } from '@/components/dashboard/StreakCards'
@@ -6,9 +7,9 @@ import { TodayTasks } from '@/components/dashboard/TodayTasks'
 import { SalaryProgress } from '@/components/dashboard/SalaryProgress'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) return null
+  const supabase = await createClient()
 
   const today = new Date()
   const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)

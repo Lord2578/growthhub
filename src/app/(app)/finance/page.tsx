@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/getUser'
 import { Header } from '@/components/layout/Header'
 import { IncomeForm } from '@/components/finance/IncomeForm'
 import { ExpenseForm } from '@/components/finance/ExpenseForm'
@@ -13,9 +14,9 @@ export default async function FinancePage({
 }: {
   searchParams: { month?: string }
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) return null
+  const supabase = await createClient()
 
   const today = new Date()
   const selectedMonth = searchParams.month ?? today.toISOString().slice(0, 7)

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -55,16 +54,18 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-2 pb-3">
-        <User className="w-4 h-4 text-primary" />
-        <CardTitle className="text-base">{t('settings.profile')}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-primary shadow-glow-sm">
+          <User className="w-3.5 h-3.5 text-white" />
+        </div>
+        <span className="font-semibold text-sm">{t('settings.profile')}</span>
+      </div>
+      <div className="p-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
             <Label>{t('settings.email')}</Label>
-            <Input value={userEmail} disabled className="opacity-60" />
+            <Input value={userEmail} disabled className="opacity-50" />
           </div>
 
           <div className="space-y-1.5">
@@ -76,7 +77,7 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
             />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label>{t('settings.language')}</Label>
             <div className="flex gap-2">
               {(['en', 'uk'] as Language[]).map((l) => (
@@ -84,19 +85,19 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
-                  className={`flex-1 p-2.5 rounded-lg border text-sm font-medium transition-colors ${
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     lang === l
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border hover:border-primary/50'
+                      ? 'bg-primary/15 ring-1 ring-primary/40 text-primary'
+                      : 'bg-white/[0.03] ring-1 ring-white/[0.07] text-muted-foreground hover:ring-white/[0.15] hover:text-foreground'
                   }`}
                 >
-                  {l === 'en' ? 'English' : 'Українська'}
+                  {l === 'en' ? '🇬🇧 English' : '🇺🇦 Українська'}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label>{t('settings.baseCurrency')}</Label>
             <div className="grid grid-cols-2 gap-2">
               {CURRENCIES.map((c) => (
@@ -104,10 +105,10 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
                   key={c}
                   type="button"
                   onClick={() => setBaseCurrencyLocal(c)}
-                  className={`p-2.5 rounded-lg border text-sm font-medium transition-colors text-left ${
+                  className={`p-2.5 rounded-xl text-sm font-medium transition-all text-left ${
                     baseCurrency === c
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border hover:border-primary/50'
+                      ? 'bg-primary/15 ring-1 ring-primary/40 text-primary'
+                      : 'bg-white/[0.03] ring-1 ring-white/[0.07] text-muted-foreground hover:ring-white/[0.15] hover:text-foreground'
                   }`}
                 >
                   {c === 'USD' && '$ USD — US Dollar'}
@@ -158,7 +159,7 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
             {saved ? t('settings.saved') : loading ? t('settings.saving') : t('settings.saveChanges')}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

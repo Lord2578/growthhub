@@ -2,9 +2,7 @@
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { CURRENCIES, CURRENCY_SYMBOLS } from '@/types'
 import { RefreshCw, AlertTriangle, TrendingUp } from 'lucide-react'
 
@@ -15,27 +13,29 @@ export function ExchangeRatesPanel() {
   const otherCurrencies = CURRENCIES.filter((c) => c !== baseCurrency)
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-primary" />
-          <CardTitle className="text-base">{t('settings.exchangeRates')}</CardTitle>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-primary shadow-glow-sm">
+            <TrendingUp className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="font-semibold text-sm">{t('settings.exchangeRates')}</span>
         </div>
         <Button variant="outline" size="sm" onClick={refresh} disabled={isLoading} className="h-7 text-xs">
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
           {t('settings.refresh')}
         </Button>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </div>
+      <div className="p-5 space-y-3">
         {ratesError && (
-          <div className="flex items-center gap-2 text-sm text-yellow-500 bg-yellow-500/10 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-2 text-sm text-yellow-500 bg-yellow-500/10 ring-1 ring-yellow-500/20 rounded-xl px-3 py-2.5">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>{ratesError}</span>
           </div>
         )}
 
-        <div className="text-xs text-muted-foreground">
-          {t('settings.base')} <span className="font-medium text-foreground">{baseCurrency}</span>
+        <div className="text-xs text-muted-foreground/70">
+          {t('settings.base')} <span className="font-semibold text-foreground">{baseCurrency}</span>
           {' — '}1 {baseCurrency} = ...
         </div>
 
@@ -47,15 +47,15 @@ export function ExchangeRatesPanel() {
               return (
                 <div
                   key={currency}
-                  className="flex items-center justify-between p-3 rounded-lg bg-secondary"
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] hover:bg-white/[0.05] transition-colors"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-muted-foreground">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.06] text-base font-bold">
                       {CURRENCY_SYMBOLS[currency]}
-                    </span>
+                    </div>
                     <div>
                       <div className="text-sm font-medium">{currency}</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-muted-foreground/60">
                         {currency === 'EUR' && 'Euro'}
                         {currency === 'USD' && 'US Dollar'}
                         {currency === 'PLN' && 'Polish Zloty'}
@@ -63,30 +63,28 @@ export function ExchangeRatesPanel() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">
-                      {rate.toFixed(4)}
-                    </div>
+                  <div className="text-sm font-semibold tabular-nums">
+                    {rate.toFixed(4)}
                   </div>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className="text-sm text-muted-foreground text-center py-4">{t('settings.loadingRates')}</div>
+          <div className="text-sm text-muted-foreground/50 text-center py-4">{t('settings.loadingRates')}</div>
         )}
 
-        <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+        <div className="text-xs text-muted-foreground/50 flex items-center gap-1.5 pt-1">
           <span>{t('settings.lastUpdated')}</span>
-          <Badge variant="secondary" className="text-xs">{lastUpdated}</Badge>
-          <span className="ml-1">• {t('settings.cachedFor')}</span>
+          <span className="bg-white/[0.06] text-muted-foreground px-2 py-0.5 rounded-md">{lastUpdated}</span>
+          <span>• {t('settings.cachedFor')}</span>
         </div>
 
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground/50">
           {t('settings.ratesBy')}{' '}
-          <span className="text-primary">frankfurter.app</span>
+          <span className="text-primary/70">frankfurter.app</span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

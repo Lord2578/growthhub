@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -57,12 +56,14 @@ export function IncomeForm({ userId, currentIncome, selectedMonth }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-2 pb-3">
-        <TrendingUp className="w-4 h-4 text-green-500" />
-        <CardTitle className="text-base">{t('finance.addIncome')}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/15 ring-1 ring-emerald-500/20">
+          <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+        </div>
+        <span className="font-semibold text-sm">{t('finance.addIncome')}</span>
+      </div>
+      <div className="p-5">
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="flex gap-2">
             <div className="flex-1 space-y-1.5">
@@ -108,7 +109,7 @@ export function IncomeForm({ userId, currentIncome, selectedMonth }: Props) {
             )}
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

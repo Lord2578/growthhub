@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
@@ -59,58 +58,63 @@ export function SavingsGoals({ goals, userId }: { goals: SavingsGoal[]; userId: 
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
-        <div className="flex items-center gap-2">
-          <Target className="w-4 h-4 text-primary" />
-          <CardTitle className="text-base">{t('finance.goals')}</CardTitle>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-primary shadow-glow-sm">
+            <Target className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="font-semibold text-sm">{t('finance.goals')}</span>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger className="inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-2 text-xs font-medium transition-colors">
-            <Plus className="w-3 h-3 mr-1" /> {t('finance.add')}
+          <DialogTrigger asChild>
+            <button className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary bg-white/[0.04] hover:bg-primary/10 border border-white/[0.07] hover:border-primary/30 px-2.5 py-1.5 rounded-lg transition-all">
+              <Plus className="w-3 h-3" /> {t('finance.add')}
+            </button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{t('finance.newGoal')}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleAdd} className="space-y-3 mt-2">
-              <div className="space-y-1.5">
-                <Label>{t('finance.goalTitle')}</Label>
-                <Input placeholder="Emergency fund" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <DialogHeader>
+            <DialogTitle>{t('finance.newGoal')}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleAdd} className="space-y-3 mt-2">
+            <div className="space-y-1.5">
+              <Label>{t('finance.goalTitle')}</Label>
+              <Input placeholder="Emergency fund" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            </div>
+            <div className="flex gap-2">
+              <div className="flex-1 space-y-1.5">
+                <Label>{t('finance.targetAmount')}</Label>
+                <Input type="number" min="0" placeholder="5000" value={target} onChange={(e) => setTarget(e.target.value)} required />
               </div>
-              <div className="flex gap-2">
-                <div className="flex-1 space-y-1.5">
-                  <Label>{t('finance.targetAmount')}</Label>
-                  <Input type="number" min="0" placeholder="5000" value={target} onChange={(e) => setTarget(e.target.value)} required />
-                </div>
-                <div className="w-24 space-y-1.5">
-                  <Label>{t('finance.currency')}</Label>
-                  <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {CURRENCIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="w-24 space-y-1.5">
+                <Label>{t('finance.currency')}</Label>
+                <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {CURRENCIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="space-y-1.5">
-                <Label>{t('finance.currentSaved')}</Label>
-                <Input type="number" min="0" placeholder="0" value={current} onChange={(e) => setCurrent(e.target.value)} />
-              </div>
-              <div className="space-y-1.5">
-                <Label>{t('finance.deadline')}</Label>
-                <Input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? t('finance.saving') : t('finance.createGoal')}
-              </Button>
-            </form>
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t('finance.currentSaved')}</Label>
+              <Input type="number" min="0" placeholder="0" value={current} onChange={(e) => setCurrent(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t('finance.deadline')}</Label>
+              <Input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? t('finance.saving') : t('finance.createGoal')}
+            </Button>
+          </form>
           </DialogContent>
         </Dialog>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </div>
+
+      <div className="p-5 space-y-4">
         {goals.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">{t('finance.noGoals')}</p>
+          <p className="text-sm text-muted-foreground/60 text-center py-4">{t('finance.noGoals')}</p>
         )}
         {goals.map((goal) => {
           const currentConverted = convert(goal.current_amount, goal.currency)
@@ -119,24 +123,28 @@ export function SavingsGoals({ goals, userId }: { goals: SavingsGoal[]; userId: 
           const days = daysUntil(goal.deadline, t('finance.overdue'), t('finance.today2'), t('finance.dLeft'))
 
           return (
-            <div key={goal.id} className="space-y-2">
+            <div key={goal.id} className="space-y-2 p-3 rounded-xl bg-white/[0.02] ring-1 ring-white/[0.05]">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">{goal.title}</span>
                 {days && (
-                  <span className={`text-xs ${days === t('finance.overdue') ? 'text-destructive' : 'text-muted-foreground'}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-md ${
+                    days === t('finance.overdue')
+                      ? 'text-destructive bg-destructive/10'
+                      : 'text-muted-foreground bg-white/[0.04]'
+                  }`}>
                     {days}
                   </span>
                 )}
               </div>
-              <Progress value={pct} className="h-2" />
+              <Progress value={pct} className="h-1.5" />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{format(currentConverted)} {t('finance.savedLabel')}</span>
-                <span>{pct}% {t('finance.pctOf')} {format(targetConverted)}</span>
+                <span className="font-medium text-foreground/70">{pct}% {t('finance.pctOf')} {format(targetConverted)}</span>
               </div>
             </div>
           )
         })}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

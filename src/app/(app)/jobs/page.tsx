@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/getUser'
 import { Header } from '@/components/layout/Header'
 import { KanbanBoard } from '@/components/jobs/KanbanBoard'
 import { JobStats } from '@/components/jobs/JobStats'
 
 export default async function JobsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) return null
+  const supabase = await createClient()
 
   const { data: jobs } = await supabase
     .from('job_applications')

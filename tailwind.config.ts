@@ -69,6 +69,56 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
+      keyframes: {
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(14px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in': {
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
+        },
+        'scale-in': {
+          from: { opacity: '0', transform: 'scale(0.94)' },
+          to:   { opacity: '1', transform: 'scale(1)' },
+        },
+        'slide-right': {
+          from: { opacity: '0', transform: 'translateX(-10px)' },
+          to:   { opacity: '1', transform: 'translateX(0)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { boxShadow: '0 0 8px hsl(var(--primary) / 0.35)' },
+          '50%':       { boxShadow: '0 0 22px hsl(var(--primary) / 0.65), 0 0 44px hsl(var(--primary) / 0.2)' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%':       { transform: 'translateY(-5px)' },
+        },
+        'shimmer': {
+          from: { transform: 'translateX(-200%)' },
+          to:   { transform: 'translateX(200%)' },
+        },
+        'count-up': {
+          from: { opacity: '0', transform: 'translateY(8px) scale(0.9)' },
+          to:   { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+      },
+      animation: {
+        'fade-in-up':   'fade-in-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'fade-in':      'fade-in 0.35s ease both',
+        'scale-in':     'scale-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'slide-right':  'slide-right 0.3s ease both',
+        'glow-pulse':   'glow-pulse 2.2s ease-in-out infinite',
+        'float':        'float 3.5s ease-in-out infinite',
+        'shimmer':      'shimmer 2s linear infinite',
+        'count-up':     'count-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+      },
+      boxShadow: {
+        'glow-primary': '0 0 20px hsl(var(--primary) / 0.3), 0 0 60px hsl(var(--primary) / 0.1)',
+        'glow-sm': '0 0 12px hsl(var(--primary) / 0.35)',
+        'card': '0 4px 24px hsl(0 0% 0% / 0.3), 0 1px 4px hsl(0 0% 0% / 0.2)',
+        'card-hover': '0 16px 48px hsl(0 0% 0% / 0.5), 0 4px 16px hsl(0 0% 0% / 0.3)',
+      },
     },
   },
   plugins: [],

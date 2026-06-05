@@ -6,9 +6,21 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CURRENCIES, Currency } from '@/types'
+
+const STEPS = [
+  { emoji: '👋', title: "Welcome to GrowthHub!", desc: "What's your name?" },
+  { emoji: '💰', title: 'Salary goals', desc: 'Track your progress toward financial freedom' },
+  { emoji: '🌍', title: 'Currency preference', desc: 'All amounts will be shown in this currency' },
+]
+
+const CURRENCY_LABELS: Record<Currency, string> = {
+  USD: '$ USD — US Dollar',
+  EUR: '€ EUR — Euro',
+  PLN: 'zł PLN — Polish Zloty',
+  UAH: '₴ UAH — Ukrainian Hryvnia',
+}
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -55,140 +67,156 @@ export default function OnboardingPage() {
     router.push('/dashboard')
   }
 
+  const current = STEPS[step - 1]
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg">
-        <CardHeader className="text-center">
-          <div className="text-4xl mb-2">
-            {step === 1 ? '' : step === 2 ? '' : ''}
-          </div>
-          <CardTitle className="text-2xl">
-            {step === 1 ? "Welcome! Let's get started" : step === 2 ? 'Your salary goals' : 'Currency preference'}
-          </CardTitle>
-          <CardDescription>
-            {step === 1 ? "What's your name?" : step === 2 ? 'This helps track your progress toward financial goals' : 'Pick your preferred display currency'}
-          </CardDescription>
-          <div className="flex gap-2 justify-center mt-2">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`h-1.5 w-8 rounded-full transition-colors ${s <= step ? 'bg-primary' : 'bg-muted'}`}
-              />
-            ))}
-          </div>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      {/* Background glow */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% -5%, hsl(258 90% 66% / 0.15), transparent)' }}
+      />
+      <div className="fixed inset-0 dot-grid pointer-events-none opacity-40" />
 
-        <CardContent>
-          <form onSubmit={step === 3 ? handleSubmit : undefined} className="space-y-4">
-            {step === 1 && (
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Your name</Label>
-                <Input
-                  id="name"
-                  placeholder="e.g. Alex"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  autoFocus
-                />
-              </div>
-            )}
+      <div className="w-full max-w-md relative">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-primary shadow-glow-primary mb-4">
+            <span className="text-xl">✦</span>
+          </div>
+          <p className="text-sm text-muted-foreground/60">Step {step} of 3</p>
+        </div>
 
-            {step === 2 && (
-              <>
-                <div className="flex gap-2 items-end">
-                  <div className="flex-1 space-y-1.5">
-                    <Label htmlFor="current-salary">Current salary / mo</Label>
-                    <Input
-                      id="current-salary"
-                      type="number"
-                      min="0"
-                      placeholder="2000"
-                      value={currentSalary}
-                      onChange={(e) => setCurrentSalary(e.target.value)}
-                    />
-                  </div>
-                  <div className="w-28 space-y-1.5">
-                    <Label>Currency</Label>
-                    <Select value={salaryCurrency} onValueChange={(v) => setSalaryCurrency(v as Currency)}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {CURRENCIES.map((c) => (
-                          <SelectItem key={c} value={c}>{c}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+        {/* Progress */}
+        <div className="flex gap-2 mb-8">
+          {[1, 2, 3].map((s) => (
+            <div
+              key={s}
+              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                s <= step ? 'bg-gradient-primary' : 'bg-white/[0.08]'
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Card */}
+        <div className="rounded-2xl ring-1 ring-white/[0.08] bg-card shadow-card overflow-hidden">
+          <div className="px-6 pt-6 pb-4 border-b border-white/[0.05]">
+            <div className="text-3xl mb-3">{current.emoji}</div>
+            <h1 className="text-xl font-bold tracking-tight">{current.title}</h1>
+            <p className="text-sm text-muted-foreground/70 mt-1">{current.desc}</p>
+          </div>
+
+          <div className="p-6">
+            <form onSubmit={step === 3 ? handleSubmit : undefined} className="space-y-4">
+              {step === 1 && (
                 <div className="space-y-1.5">
-                  <Label htmlFor="target-salary">Target salary / mo</Label>
+                  <Label htmlFor="name">Your name</Label>
                   <Input
-                    id="target-salary"
-                    type="number"
-                    min="0"
-                    placeholder="4000"
-                    value={targetSalary}
-                    onChange={(e) => setTargetSalary(e.target.value)}
+                    id="name"
+                    placeholder="e.g. Alex"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    autoFocus
                   />
                 </div>
-              </>
-            )}
+              )}
 
-            {step === 3 && (
-              <div className="space-y-1.5">
-                <Label>Base currency for all amounts</Label>
+              {step === 2 && (
+                <>
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1 space-y-1.5">
+                      <Label htmlFor="current-salary">Current salary / mo</Label>
+                      <Input
+                        id="current-salary"
+                        type="number"
+                        min="0"
+                        placeholder="2000"
+                        value={currentSalary}
+                        onChange={(e) => setCurrentSalary(e.target.value)}
+                      />
+                    </div>
+                    <div className="w-28 space-y-1.5">
+                      <Label>Currency</Label>
+                      <Select value={salaryCurrency} onValueChange={(v) => setSalaryCurrency(v as Currency)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {CURRENCIES.map((c) => (
+                            <SelectItem key={c} value={c}>{c}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="target-salary">Target salary / mo</Label>
+                    <Input
+                      id="target-salary"
+                      type="number"
+                      min="0"
+                      placeholder="4000"
+                      value={targetSalary}
+                      onChange={(e) => setTargetSalary(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+
+              {step === 3 && (
                 <div className="grid grid-cols-2 gap-2">
                   {CURRENCIES.map((c) => (
                     <button
                       key={c}
                       type="button"
                       onClick={() => setBaseCurrency(c)}
-                      className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`p-3 rounded-xl text-sm font-medium transition-all text-left ${
                         baseCurrency === c
-                          ? 'border-primary bg-primary/10 text-primary'
-                          : 'border-border hover:border-primary/50'
+                          ? 'bg-primary/15 ring-1 ring-primary/40 text-primary'
+                          : 'bg-white/[0.03] ring-1 ring-white/[0.07] text-muted-foreground hover:ring-white/[0.15] hover:text-foreground'
                       }`}
                     >
-                      {c === 'USD' && '$ USD - US Dollar'}
-                      {c === 'EUR' && '€ EUR - Euro'}
-                      {c === 'PLN' && 'zł PLN - Polish Zloty'}
-                      {c === 'UAH' && '₴ UAH - Ukrainian Hryvnia'}
+                      {CURRENCY_LABELS[c]}
                     </button>
                   ))}
                 </div>
+              )}
+
+              {error && (
+                <p className="text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-xl">
+                  {error}
+                </p>
+              )}
+
+              <div className="flex gap-2 pt-1">
+                {step > 1 && (
+                  <Button type="button" variant="outline" className="flex-1" onClick={() => setStep(s => s - 1)}>
+                    Back
+                  </Button>
+                )}
+                {step < 3 ? (
+                  <Button type="button" className="flex-1" onClick={() => setStep(s => s + 1)}>
+                    Continue
+                  </Button>
+                ) : (
+                  <Button type="submit" className="flex-1" disabled={loading}>
+                    {loading ? 'Saving...' : 'Go to Dashboard →'}
+                  </Button>
+                )}
               </div>
-            )}
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
-
-            <div className="flex gap-2">
-              {step > 1 && (
-                <Button type="button" variant="outline" className="flex-1" onClick={() => setStep(s => s - 1)}>
-                  Back
-                </Button>
+              {step === 1 && (
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full text-sm text-muted-foreground/50 hover:text-muted-foreground text-center transition-colors"
+                >
+                  Skip for now
+                </button>
               )}
-              {step < 3 ? (
-                <Button type="button" className="flex-1" onClick={() => setStep(s => s + 1)}>
-                  Continue
-                </Button>
-              ) : (
-                <Button type="submit" className="flex-1" disabled={loading}>
-                  {loading ? 'Saving...' : 'Go to Dashboard'}
-                </Button>
-              )}
-            </div>
-
-            {step === 1 && (
-              <button
-                type="button"
-                onClick={() => router.push('/dashboard')}
-                className="w-full text-sm text-muted-foreground hover:text-foreground text-center"
-              >
-                Skip for now
-              </button>
-            )}
-          </form>
-        </CardContent>
-      </Card>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

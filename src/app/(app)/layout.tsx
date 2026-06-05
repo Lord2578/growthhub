@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/getUser'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { CurrencyProvider } from '@/lib/context/CurrencyContext'
@@ -7,11 +8,11 @@ import { LanguageProvider } from '@/lib/context/LanguageContext'
 import { Currency } from '@/types'
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
 
   if (!user) redirect('/login')
 
+  const supabase = await createClient()
   const { data: settings } = await supabase
     .from('user_settings')
     .select('base_currency')

@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/getUser'
 import { Header } from '@/components/layout/Header'
 import { HabitChecklist } from '@/components/habits/HabitChecklist'
 import { HabitStats } from '@/components/habits/HabitStats'
 
 export default async function HabitsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) return null
+  const supabase = await createClient()
 
   const today = new Date().toISOString().split('T')[0]
   const thirtyDaysAgo = new Date()

@@ -36,17 +36,17 @@ function JobCard({ job, onStatusChange }: { job: JobApplication; onStatusChange:
       : null
 
   return (
-    <div className="bg-background rounded-lg p-3 border border-border space-y-2">
+    <div className="rounded-xl p-3 ring-1 ring-white/[0.07] bg-white/[0.02] hover:bg-white/[0.04] hover:ring-white/[0.12] transition-all space-y-2">
       <div className="flex items-start justify-between gap-2">
-        <div>
+        <div className="min-w-0">
           <div className="text-sm font-medium leading-tight">{job.position}</div>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-            <Building2 className="w-3 h-3" />
-            {job.company}
+          <div className="flex items-center gap-1 text-xs text-muted-foreground/70 mt-0.5">
+            <Building2 className="w-3 h-3 shrink-0" />
+            <span className="truncate">{job.company}</span>
           </div>
         </div>
         <Select value={job.status} onValueChange={(v) => onStatusChange(job.id, v as JobStatus)}>
-          <SelectTrigger className="h-6 w-24 text-xs border-0 bg-transparent p-0 pr-2">
+          <SelectTrigger className="h-6 w-24 text-xs border-0 bg-transparent p-0 pr-2 shrink-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -57,15 +57,15 @@ function JobCard({ job, onStatusChange }: { job: JobApplication; onStatusChange:
         </Select>
       </div>
       {salary && (
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground/70">
           <Banknote className="w-3 h-3" />
           {salary}/mo
         </div>
       )}
       {job.notes && (
-        <p className="text-xs text-muted-foreground line-clamp-2">{job.notes}</p>
+        <p className="text-xs text-muted-foreground/60 line-clamp-2">{job.notes}</p>
       )}
-      <div className="text-xs text-muted-foreground">
+      <div className="text-xs text-muted-foreground/50">
         {new Date(job.applied_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
       </div>
     </div>
@@ -120,8 +120,8 @@ function AddJobDialog({ userId, onAdd }: { userId: string; onAdd: (job: JobAppli
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 text-sm font-medium transition-colors">
-        <Plus className="w-4 h-4 mr-1" /> {t('jobs.addApplication')}
+      <DialogTrigger className="inline-flex items-center justify-center rounded-xl bg-gradient-primary text-white shadow-glow-sm hover:shadow-glow-primary h-9 px-4 text-sm font-medium transition-all">
+        <Plus className="w-4 h-4 mr-1.5" /> {t('jobs.addApplication')}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -193,23 +193,23 @@ export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplicati
         <AddJobDialog userId={userId} onAdd={handleAdd} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 overflow-x-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 overflow-x-auto">
         {JOB_STATUSES.map((status) => {
           const statusJobs = jobs.filter((j) => j.status === status)
 
           return (
-            <div key={status} className="min-w-[200px]">
-              <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border mb-3 ${STATUS_COLORS[status]}`}>
+            <div key={status} className="min-w-[180px]">
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border mb-3 ${STATUS_COLORS[status]}`}>
                 <span className="text-xs font-semibold">{t(`jobs.status.${status}`)}</span>
-                <span className="text-xs opacity-70 ml-auto">{statusJobs.length}</span>
+                <span className="text-xs opacity-60 ml-auto font-medium">{statusJobs.length}</span>
               </div>
               <div className="space-y-2">
                 {statusJobs.map((job) => (
                   <JobCard key={job.id} job={job} onStatusChange={handleStatusChange} />
                 ))}
                 {statusJobs.length === 0 && (
-                  <div className="h-16 rounded-lg border border-dashed border-border flex items-center justify-center">
-                    <span className="text-xs text-muted-foreground">{t('jobs.empty')}</span>
+                  <div className="h-16 rounded-xl border border-dashed border-white/[0.08] flex items-center justify-center">
+                    <span className="text-xs text-muted-foreground/40">{t('jobs.empty')}</span>
                   </div>
                 )}
               </div>

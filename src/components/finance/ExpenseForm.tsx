@@ -6,13 +6,12 @@ import { createClient } from '@/lib/supabase/client'
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
 import { convertToUSD } from '@/lib/currency'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Currency, CURRENCIES, ExpenseCategory, EXPENSE_CATEGORIES } from '@/types'
-import { Plus } from 'lucide-react'
+import { Receipt } from 'lucide-react'
 
 export function ExpenseForm({ userId }: { userId: string; selectedMonth: string }) {
   const router = useRouter()
@@ -51,12 +50,14 @@ export function ExpenseForm({ userId }: { userId: string; selectedMonth: string 
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-2 pb-3">
-        <Plus className="w-4 h-4 text-red-500" />
-        <CardTitle className="text-base">{t('finance.addExpense')}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-rose-500/15 ring-1 ring-rose-500/20">
+          <Receipt className="w-3.5 h-3.5 text-rose-400" />
+        </div>
+        <span className="font-semibold text-sm">{t('finance.addExpense')}</span>
+      </div>
+      <div className="p-5">
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="flex gap-2">
             <div className="flex-1 space-y-1.5">
@@ -118,7 +119,7 @@ export function ExpenseForm({ userId }: { userId: string; selectedMonth: string 
             {loading ? t('finance.adding') : t('finance.addExpense')}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

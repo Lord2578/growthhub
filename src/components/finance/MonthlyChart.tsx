@@ -2,9 +2,9 @@
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { MonthlyIncome, Expense } from '@/types'
+import { BarChart2 } from 'lucide-react'
 
 interface Props {
   income: MonthlyIncome[]
@@ -34,34 +34,42 @@ export function MonthlyChart({ income, expenses }: Props) {
   }).reverse()
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base">{t('finance.incomeVsExpenses')} ({baseCurrency})</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06]">
+            <BarChart2 className="w-3.5 h-3.5 text-muted-foreground" />
+          </div>
+          <span className="font-semibold text-sm">{t('finance.incomeVsExpenses')}</span>
+        </div>
+        <span className="text-xs text-muted-foreground/60 bg-white/[0.04] px-2.5 py-1 rounded-lg">{baseCurrency}</span>
+      </div>
+      <div className="p-5">
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">{t('finance.noData')}</p>
+          <p className="text-sm text-muted-foreground/60 text-center py-8">{t('finance.noData')}</p>
         ) : (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
-              <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
+                  backgroundColor: 'hsl(224 22% 8%)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '12px',
                   fontSize: '12px',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                 }}
+                cursor={{ fill: 'rgba(255,255,255,0.03)' }}
               />
-              <Legend wrapperStyle={{ fontSize: '12px' }} />
-              <Bar dataKey="income" name={t('finance.incomeLabel')} fill="hsl(142, 76%, 46%)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="expenses" name={t('finance.expensesLabel')} fill="hsl(0, 84%, 60%)" radius={[4, 4, 0, 0]} />
+              <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }} />
+              <Bar dataKey="income" name={t('finance.incomeLabel')} fill="hsl(142, 76%, 46%)" radius={[6, 6, 0, 0]} maxBarSize={32} />
+              <Bar dataKey="expenses" name={t('finance.expensesLabel')} fill="hsl(0, 84%, 60%)" radius={[6, 6, 0, 0]} maxBarSize={32} />
             </BarChart>
           </ResponsiveContainer>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

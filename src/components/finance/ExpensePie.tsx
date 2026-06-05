@@ -2,9 +2,9 @@
 
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { useTranslation } from '@/lib/hooks/useTranslation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Expense } from '@/types'
+import { PieChart as PieChartIcon } from 'lucide-react'
 
 const COLORS: Record<string, string> = {
   housing: 'hsl(220, 70%, 50%)',
@@ -35,13 +35,16 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
   const total = data.reduce((s, d) => s + d.value, 0)
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base">{t('finance.expensesByCategory')}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="animate-fade-in-up rounded-2xl ring-1 ring-white/[0.07] bg-card shadow-card overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/[0.05]">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06]">
+          <PieChartIcon className="w-3.5 h-3.5 text-muted-foreground" />
+        </div>
+        <span className="font-semibold text-sm">{t('finance.expensesByCategory')}</span>
+      </div>
+      <div className="p-5">
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">{t('finance.noExpenses')}</p>
+          <p className="text-sm text-muted-foreground/60 text-center py-8">{t('finance.noExpenses')}</p>
         ) : (
           <>
             <ResponsiveContainer width="100%" height={200}>
@@ -50,10 +53,11 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
                   data={data}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
+                  innerRadius={52}
+                  outerRadius={82}
                   paddingAngle={3}
                   dataKey="value"
+                  strokeWidth={0}
                 >
                   {data.map((entry) => (
                     <Cell key={entry.name} fill={COLORS[entry.name] ?? COLORS.other} />
@@ -62,27 +66,28 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
                 <Tooltip
                   formatter={(value) => [format(Number(value)), '']}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
+                    backgroundColor: 'hsl(224 22% 8%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: '12px',
                     fontSize: '12px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                   }}
                 />
               </PieChart>
             </ResponsiveContainer>
             <div className="space-y-1.5 mt-2">
               {data.map((d) => (
-                <div key={d.name} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
+                <div key={d.name} className="flex items-center justify-between py-1.5 px-2 rounded-xl hover:bg-white/[0.02] transition-colors text-sm">
+                  <div className="flex items-center gap-2.5">
                     <div
-                      className="w-2.5 h-2.5 rounded-full"
+                      className="w-2 h-2 rounded-full shrink-0"
                       style={{ backgroundColor: COLORS[d.name] ?? COLORS.other }}
                     />
                     <span className="text-muted-foreground">{t(`categories.${d.name}`)}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{format(d.value)}</span>
-                    <span className="text-xs text-muted-foreground w-8 text-right">
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold">{format(d.value)}</span>
+                    <span className="text-xs text-muted-foreground/50 w-8 text-right">
                       {Math.round((d.value / total) * 100)}%
                     </span>
                   </div>
@@ -91,7 +96,7 @@ export function ExpensePie({ expenses }: { expenses: Expense[] }) {
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
