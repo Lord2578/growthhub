@@ -12,7 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Expense, Currency, CURRENCIES, ExpenseCategory, EXPENSE_CATEGORIES } from '@/types'
-import { Trash2, Receipt, Pencil } from 'lucide-react'
+import { exportExpensesCSV } from '@/lib/csv'
+import { Trash2, Receipt, Pencil, Download } from 'lucide-react'
 
 export function ExpenseList({ initialExpenses }: { initialExpenses: Expense[] }) {
   const router = useRouter()
@@ -88,9 +89,19 @@ export function ExpenseList({ initialExpenses }: { initialExpenses: Expense[] })
             </div>
             <span className="font-semibold text-sm">{t('finance.expenses')}</span>
           </div>
-          <span className="text-xs text-muted-foreground/60 bg-white/[0.04] px-2.5 py-1 rounded-lg">
-            {expenses.length} {t('finance.items')}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground/60 bg-white/[0.04] px-2.5 py-1 rounded-lg">
+              {expenses.length} {t('finance.items')}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => exportExpensesCSV(expenses)}
+              title={t('common.exportCSV')}
+            >
+              <Download className="w-3.5 h-3.5" />
+            </Button>
+          </div>
         </div>
 
         {/* List */}

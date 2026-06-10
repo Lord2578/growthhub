@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { JobApplication, JobStatus, JOB_STATUSES, Currency, CURRENCIES } from '@/types'
-import { Plus, Building2, Banknote } from 'lucide-react'
+import { exportJobsCSV } from '@/lib/csv'
+import { Plus, Building2, Banknote, Download } from 'lucide-react'
 
 const STATUS_COLORS: Record<JobStatus, string> = {
   applied:   'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -190,7 +191,19 @@ export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplicati
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-muted-foreground">{t('jobs.board')}</h3>
-        <AddJobDialog userId={userId} onAdd={handleAdd} />
+        <div className="flex items-center gap-2">
+          {jobs.length > 0 && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => exportJobsCSV(jobs)}
+              title={t('common.exportCSV')}
+            >
+              <Download className="w-4 h-4" />
+            </Button>
+          )}
+          <AddJobDialog userId={userId} onAdd={handleAdd} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 overflow-x-auto">

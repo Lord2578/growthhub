@@ -150,6 +150,7 @@ export const translations = {
       add: 'Add',
       cancel: 'Cancel',
       save: 'Save',
+      exportCSV: 'Export CSV',
     },
   },
   uk: {
@@ -301,6 +302,7 @@ export const translations = {
       add: 'Додати',
       cancel: 'Скасувати',
       save: 'Зберегти',
+      exportCSV: 'Експорт CSV',
     },
   },
 } as const
