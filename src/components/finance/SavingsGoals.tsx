@@ -67,10 +67,8 @@ export function SavingsGoals({ goals, userId }: { goals: SavingsGoal[]; userId: 
           <span className="font-semibold text-sm">{t('finance.goals')}</span>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <button className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary bg-white/[0.04] hover:bg-primary/10 border border-white/[0.07] hover:border-primary/30 px-2.5 py-1.5 rounded-lg transition-all">
-              <Plus className="w-3 h-3" /> {t('finance.add')}
-            </button>
+          <DialogTrigger className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary bg-white/[0.04] hover:bg-primary/10 border border-white/[0.07] hover:border-primary/30 px-2.5 py-1.5 rounded-lg transition-all">
+            <Plus className="w-3 h-3" /> {t('finance.add')}
           </DialogTrigger>
           <DialogContent>
           <DialogHeader>

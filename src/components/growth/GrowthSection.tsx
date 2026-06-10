@@ -98,7 +98,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
       <div className="relative flex items-start justify-between px-5 py-4 border-b border-white/[0.05]">
         <div className="flex items-center gap-3">
           <div className={`flex items-center justify-center w-9 h-9 rounded-xl text-xl ${
-            active ? 'bg-primary/10 ring-1 ring-primary/20' : 'bg-white/[0.04] ring-1 ring-white/[0.07]'
+            active ? 'bg-primary/10 ring-1 ring-primary/20' : 'bg-white/[0.06] ring-1 ring-white/[0.07]'
           }`}>
             {config.icon}
           </div>

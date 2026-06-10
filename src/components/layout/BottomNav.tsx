@@ -29,7 +29,7 @@ export function BottomNav() {
               )}
               <span className={cn(
                 'flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200',
-                active ? 'bg-primary/15' : ''
+                active ? 'bg-primary/15' : 'bg-white/[0.05]'
               )}>
                 <Icon className={cn('w-4.5 h-4.5', active ? 'text-primary' : '')} style={{ width: '18px', height: '18px' }} />
               </span>
