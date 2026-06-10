@@ -143,7 +143,7 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
             </span>
             <button
               onClick={() => deleteTask(task.id)}
-              className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-6 h-6 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+              className="sm:opacity-0 sm:group-hover:opacity-100 flex items-center justify-center w-6 h-6 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>

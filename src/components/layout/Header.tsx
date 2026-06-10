@@ -16,10 +16,10 @@ export function Header({ title }: { title?: string }) {
   const displayTitle = title ?? (routeTKey ? t(routeTKey) : '')
 
   return (
-    <header className="flex items-center justify-between px-5 py-3.5 sticky top-0 z-10 glass border-b border-white/[0.06]">
-      <h2 className="text-lg font-semibold tracking-tight">{displayTitle}</h2>
+    <header className="flex items-center justify-between px-5 py-3.5 sticky top-0 z-10 glass border-b border-white/[0.06] gap-3">
+      <h2 className="text-lg font-semibold tracking-tight min-w-0 truncate">{displayTitle}</h2>
 
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2 shrink-0">
         {ratesError && (
           <div title={ratesError} className="text-yellow-400/80">
             <AlertTriangle className="w-4 h-4" />
@@ -32,7 +32,7 @@ export function Header({ title }: { title?: string }) {
             <button
               key={c}
               onClick={() => setBaseCurrency(c as Currency)}
-              className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-all duration-200 ${
+              className={`px-2 sm:px-2.5 py-1 text-xs font-medium rounded-lg transition-all duration-200 ${
                 baseCurrency === c
                   ? 'bg-gradient-primary text-white shadow-glow-sm'
                   : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.06]'

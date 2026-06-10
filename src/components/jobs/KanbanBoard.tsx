@@ -206,12 +206,12 @@ export function KanbanBoard({ initialJobs, userId }: { initialJobs: JobApplicati
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 overflow-x-auto">
+      <div className="flex gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
         {JOB_STATUSES.map((status) => {
           const statusJobs = jobs.filter((j) => j.status === status)
 
           return (
-            <div key={status} className="min-w-[180px]">
+            <div key={status} className="min-w-[200px] sm:min-w-0">
               <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border mb-3 ${STATUS_COLORS[status]}`}>
                 <span className="text-xs font-semibold">{t(`jobs.status.${status}`)}</span>
                 <span className="text-xs opacity-60 ml-auto font-medium">{statusJobs.length}</span>

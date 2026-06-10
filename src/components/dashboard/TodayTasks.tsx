@@ -114,28 +114,30 @@ export function TodayTasks({
           ))}
 
           {adding ? (
-            <form onSubmit={addTask} className="flex gap-2 pt-1 px-1">
+            <form onSubmit={addTask} className="flex flex-wrap gap-2 pt-1 px-1">
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Task description..."
-                className="flex-1 h-8 text-sm"
+                className="flex-1 min-w-[140px] h-8 text-sm"
                 autoFocus
               />
-              <Select value={newArea} onValueChange={(v) => setNewArea(v as GrowthArea)}>
-                <SelectTrigger className="w-28 h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {GROWTH_AREAS.map((a) => (
-                    <SelectItem key={a} value={a} className="text-xs capitalize">{a}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button type="submit" size="sm" className="h-8">{t('common.add')}</Button>
-              <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
-                {t('common.cancel')}
-              </Button>
+              <div className="flex gap-2">
+                <Select value={newArea} onValueChange={(v) => setNewArea(v as GrowthArea)}>
+                  <SelectTrigger className="w-28 h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GROWTH_AREAS.map((a) => (
+                      <SelectItem key={a} value={a} className="text-xs capitalize">{a}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button type="submit" size="sm" className="h-8">{t('common.add')}</Button>
+                <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
+                  {t('common.cancel')}
+                </Button>
+              </div>
             </form>
           ) : (
             <button

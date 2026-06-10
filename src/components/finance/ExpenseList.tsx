@@ -135,7 +135,7 @@ export function ExpenseList({ initialExpenses }: { initialExpenses: Expense[] })
                     <div className="text-xs text-muted-foreground/50">{expense.amount} {expense.currency}</div>
                   )}
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => openEdit(expense)}
                     className="flex items-center justify-center w-7 h-7 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
