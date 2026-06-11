@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { UserSettings, Currency, CURRENCIES } from '@/types'
 import { Language } from '@/lib/i18n/translations'
-import { User } from 'lucide-react'
+import { User, Bell } from 'lucide-react'
 
 interface Props {
   settings: UserSettings | null
@@ -29,6 +29,8 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
   const [targetSalary, setTargetSalary] = useState(settings?.target_salary?.toString() ?? '')
   const [salaryCurrency, setSalaryCurrency] = useState<Currency>((settings?.salary_currency as Currency) ?? 'USD')
   const [baseCurrency, setBaseCurrencyLocal] = useState<Currency>((settings?.base_currency as Currency) ?? 'USD')
+  const [reminderEnabled, setReminderEnabled] = useState(settings?.reminder_enabled ?? false)
+  const [reminderTime, setReminderTime] = useState(settings?.reminder_time ?? '09:00')
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -44,6 +46,8 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
       target_salary: targetSalary ? parseFloat(targetSalary) : null,
       salary_currency: salaryCurrency,
       base_currency: baseCurrency,
+      reminder_enabled: reminderEnabled,
+      reminder_time: reminderTime,
     }, { onConflict: 'user_id' })
 
     setBaseCurrency(baseCurrency)
@@ -153,6 +157,49 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
                 </Select>
               </div>
             </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-violet-500/15 ring-1 ring-violet-500/20 shrink-0">
+                <Bell className="w-3.5 h-3.5 text-violet-400" />
+              </div>
+              <Label className="text-sm font-semibold">{t('settings.reminders')}</Label>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setReminderEnabled((v) => !v)}
+              className={`flex items-center justify-between w-full p-3 rounded-xl ring-1 transition-all ${
+                reminderEnabled
+                  ? 'bg-primary/10 ring-primary/30'
+                  : 'bg-white/[0.03] ring-white/[0.07] hover:ring-white/[0.15]'
+              }`}
+            >
+              <span className={`text-sm ${reminderEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+                {t('settings.reminderEnabled')}
+              </span>
+              <div className={`relative w-10 h-5 rounded-full transition-all ${
+                reminderEnabled ? 'bg-gradient-primary' : 'bg-white/[0.1]'
+              }`}>
+                <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${
+                  reminderEnabled ? 'left-5' : 'left-0.5'
+                }`} />
+              </div>
+            </button>
+
+            {reminderEnabled && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">{t('settings.reminderTime')}</Label>
+                <Input
+                  type="time"
+                  value={reminderTime}
+                  onChange={(e) => setReminderTime(e.target.value)}
+                  className="w-32"
+                />
+                <p className="text-xs text-muted-foreground/60">{t('settings.reminderNote')}</p>
+              </div>
+            )}
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>

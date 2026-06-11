@@ -26,6 +26,8 @@ export interface UserSettings {
   current_salary: number | null
   target_salary: number | null
   salary_currency: Currency
+  reminder_enabled: boolean
+  reminder_time: string  // HH:MM UTC, e.g. "09:00"
   created_at: string
 }
 

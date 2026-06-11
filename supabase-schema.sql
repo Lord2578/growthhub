@@ -146,3 +146,26 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure handle_new_user();
+
+-- ============================================================
+-- HABIT REMINDERS (run ALTER after initial schema is applied)
+-- ============================================================
+
+alter table user_settings
+  add column if not exists reminder_enabled boolean not null default false,
+  add column if not exists reminder_time text not null default '09:00';
+
+-- Schedule edge function every hour via pg_cron + pg_net.
+-- Run this after deploying the edge function, replacing the placeholders:
+--
+-- SELECT cron.schedule(
+--   'send-habit-reminders',
+--   '0 * * * *',
+--   $$
+--   SELECT net.http_post(
+--     url        := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-habit-reminders',
+--     headers    := '{"Authorization": "Bearer <SERVICE_ROLE_KEY>", "Content-Type": "application/json"}'::jsonb,
+--     body       := '{}'::jsonb
+--   );
+--   $$
+-- );
