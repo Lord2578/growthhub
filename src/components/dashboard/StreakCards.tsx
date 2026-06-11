@@ -29,7 +29,7 @@ export function StreakCards({ streaks }: { streaks: GrowthStreak[] }) {
               {active && (
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-transparent pointer-events-none" />
               )}
-              <div className={`relative text-2xl mb-2 ${active ? 'animate-float' : ''}`}>
+              <div className={`relative text-2xl mb-2 h-8 flex items-center justify-center ${active ? 'animate-float' : ''}`}>
                 {config.icon}
               </div>
               <div className={`relative text-3xl font-bold tracking-tight mb-0.5 ${

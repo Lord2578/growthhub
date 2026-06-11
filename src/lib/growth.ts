@@ -3,25 +3,25 @@ import { GrowthArea } from '@/types'
 export const AREA_CONFIG: Record<GrowthArea, { label: string; icon: string; color: string; description: string }> = {
   english: {
     label: 'English',
-    icon: '',
+    icon: '📖',
     color: 'text-blue-400',
     description: 'Reading, writing, vocabulary, speaking practice',
   },
   technical: {
     label: 'Technical Skills',
-    icon: '',
+    icon: '💻',
     color: 'text-purple-400',
     description: 'Coding, system design, algorithms',
   },
   interview: {
     label: 'Interview Prep',
-    icon: '‍',
+    icon: '🎯',
     color: 'text-yellow-400',
     description: 'Behavioral questions, mock interviews, STAR stories',
   },
   jobs: {
     label: 'Job Search',
-    icon: '',
+    icon: '🔍',
     color: 'text-green-400',
     description: 'Applications, networking, LinkedIn, referrals',
   },
