@@ -96,15 +96,15 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-transparent pointer-events-none rounded-2xl" />
       )}
       <div className="relative flex items-start justify-between px-5 py-4 border-b border-white/[0.05]">
-        <div className="flex items-center gap-3">
-          <div className={`flex items-center justify-center w-9 h-9 rounded-xl text-xl ${
+        <div className="flex items-center gap-3 min-w-0">
+          <div className={`flex items-center justify-center w-9 h-9 rounded-xl text-xl shrink-0 ${
             active ? 'bg-primary/10 ring-1 ring-primary/20' : 'bg-white/[0.06] ring-1 ring-white/[0.07]'
           }`}>
             {config.icon}
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="text-sm font-semibold">{t(`growth.areas.${area}`)}</div>
-            <div className="text-xs text-muted-foreground/60 mt-0.5">{config.description}</div>
+            <div className="text-xs text-muted-foreground/60 mt-0.5 truncate">{config.description}</div>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -165,18 +165,20 @@ export function GrowthSection({ area, streak, tasks: initialTasks, userId, today
         )}
 
         {adding ? (
-          <form onSubmit={addTask} className="flex gap-2 pt-1 px-1">
+          <form onSubmit={addTask} className="flex flex-wrap gap-2 pt-1 px-1">
             <Input
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="What will you do today?"
-              className="flex-1 h-8 text-sm"
+              className="flex-1 min-w-[140px] h-8 text-sm"
               autoFocus
             />
-            <Button type="submit" size="sm" className="h-8" disabled={loading}>{t('growth.add')}</Button>
-            <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
-              {t('growth.cancel')}
-            </Button>
+            <div className="flex gap-2">
+              <Button type="submit" size="sm" className="h-8" disabled={loading}>{t('growth.add')}</Button>
+              <Button type="button" variant="ghost" size="sm" className="h-8" onClick={() => setAdding(false)}>
+                {t('growth.cancel')}
+              </Button>
+            </div>
           </form>
         ) : (
           <div className="flex gap-2 pt-1 px-1">

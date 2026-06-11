@@ -30,9 +30,9 @@ export function SalaryProgress({ settings }: { settings: UserSettings | null }) 
           <span className="text-xs font-bold text-gradient-primary">{pct}%</span>
         </div>
 
-        <div className="flex justify-between text-sm mb-2.5">
-          <span className="font-semibold text-foreground">{format(current)} <span className="text-muted-foreground font-normal text-xs">{t('dashboard.perMo')}</span></span>
-          <span className="text-muted-foreground text-xs">{t('dashboard.goal')} {format(target)} {t('dashboard.perMo')}</span>
+        <div className="flex justify-between text-sm mb-2.5 gap-2">
+          <span className="font-semibold text-foreground shrink-0">{format(current)} <span className="text-muted-foreground font-normal text-xs">{t('dashboard.perMo')}</span></span>
+          <span className="text-muted-foreground text-xs text-right">{t('dashboard.goal')} {format(target)} {t('dashboard.perMo')}</span>
         </div>
 
         {/* Progress track */}

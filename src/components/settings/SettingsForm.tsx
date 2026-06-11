@@ -122,7 +122,7 @@ export function SettingsForm({ settings, userId, userEmail }: Props) {
 
           <div className="space-y-2">
             <Label>{t('settings.salary')}</Label>
-            <div className="flex gap-2 items-end">
+            <div className="flex flex-wrap gap-2 items-end">
               <div className="flex-1 space-y-1.5">
                 <Label className="text-xs text-muted-foreground">{t('settings.current')}</Label>
                 <Input

@@ -72,7 +72,7 @@ export function HabitStats({ habits, recentLogs }: Props) {
         <div className="flex items-center gap-1 mb-2 px-1">
           <div className="flex-1 min-w-0" />
           {last7.map((day) => (
-            <div key={day} className="w-8 text-center text-xs text-muted-foreground/50">
+            <div key={day} className="w-7 sm:w-8 text-center text-xs text-muted-foreground/50">
               {new Date(day + 'T12:00:00').toLocaleDateString('en', { weekday: 'narrow' })}
             </div>
           ))}
@@ -97,7 +97,7 @@ export function HabitStats({ habits, recentLogs }: Props) {
                   return (
                     <div
                       key={day}
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold transition-all ${
+                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs font-semibold transition-all ${
                         done
                           ? 'bg-primary/20 text-primary ring-1 ring-primary/30'
                           : 'bg-white/[0.04] text-muted-foreground/30'
